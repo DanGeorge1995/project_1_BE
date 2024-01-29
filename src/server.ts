@@ -3,7 +3,7 @@ import router from "./router";
 import morgan from "morgan";
 import cors from "cors";
 import { protect } from "./modules/auth";
-import { loginUser, registerUser } from "./handlers/user";
+import { loginUser, registerUser, getUsers } from "./handlers/user";
 
 const app = express();
 

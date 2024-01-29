@@ -43,3 +43,13 @@ export const loginUser = async (req, res, next) => {
     next(err);
   }
 };
+
+export const getUsers = async (req, res, next) => {
+  try {
+    const users = await prisma.user.findMany();
+    res.json({ users: users });
+  }
+  catch (err) {
+    next(err);
+  }
+}
