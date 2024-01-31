@@ -9,13 +9,15 @@ export const hashPassword = (password) => {
   return bcrypt.hash(password, 5);
 };
 
-export const createJWT = (user) => {
+export const createJWT = (user, secret, expiration) => {
   const token = jwt.sign(
     {
       id: user.id,
       username: user.name,
+      email: user.email,
     },
-    process.env.JWT_SECRET
+    secret,
+    { expiresIn: expiration }
   );
   return token;
 };
