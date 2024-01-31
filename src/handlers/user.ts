@@ -1,6 +1,10 @@
 import prisma from "../db";
 import { comparePasswords, createJWT, hashPassword } from "../modules/auth";
 
+
+// node js library used for creating HTTP error objects
+const createErrors = require("http-errors");
+
 export const registerUser = async (req, res, next) => {
   try {
     const createdUser = await prisma.user.create({
@@ -36,6 +40,39 @@ export const loginUser = async (req, res, next) => {
   // } catch (err) {
   //   next(err);
   // }
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        email: req.body.email
+      }
+    })
+    if (!user) {
+      console.log("WRONG EMAIL")
+      res.status(404).json({ message: 'Wrong email' })
+    }
+
+    const isValidPassword = await comparePasswords(req.body.password, user.password);
+    if (!isValidPassword) {
+      console.log("WRONG PASSWORD")
+      // throw createErrors.NotFound('Email or password not valid !');
+      res.status(404).json({ message: 'Wrong password' })
+    }
+
+    const accessToken = createJWT(user, process.env.ACCESS_TOKEN_SECRET, '30s');
+    const refreshToken = createJWT(user, process.env.REFRESH_TOKEN_SECRET, '1min');
+
+    const updatedUser = await prisma.user.update({
+      where: { id: user.id },
+      data: { refresh_token: refreshToken },
+    });
+
+    res.cookie('refresh_token', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+    res.json({ accessToken });
+
+
+  } catch (err) {
+    next(err);
+  }
 };
 
 export const getUsers = async (req, res, next) => {
