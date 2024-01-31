@@ -1,10 +1,6 @@
 import prisma from "../db";
 import { comparePasswords, createJWT, hashPassword } from "../modules/auth";
 
-
-// node js library used for creating HTTP error objects
-const createErrors = require("http-errors");
-
 export const registerUser = async (req, res, next) => {
   try {
     const createdUser = await prisma.user.create({
@@ -32,14 +28,6 @@ export const registerUser = async (req, res, next) => {
 };
 
 export const loginUser = async (req, res, next) => {
-  // try {
-  //// do here the login logic
-  //// similar  to registerUser function
-  //// first: find user in db, if it doesn't exist,  send error message back to client
-  //// if it exist, create tokens and follow the logic as on register
-  // } catch (err) {
-  //   next(err);
-  // }
   try {
     const user = await prisma.user.findUnique({
       where: {
@@ -47,14 +35,11 @@ export const loginUser = async (req, res, next) => {
       }
     })
     if (!user) {
-      console.log("WRONG EMAIL")
       res.status(404).json({ message: 'Wrong email' })
     }
 
     const isValidPassword = await comparePasswords(req.body.password, user.password);
     if (!isValidPassword) {
-      console.log("WRONG PASSWORD")
-      // throw createErrors.NotFound('Email or password not valid !');
       res.status(404).json({ message: 'Wrong password' })
     }
 

@@ -19,8 +19,8 @@ app.get("/", (req, res) => {
 app.use("/api", protect, router); // allow using some configuration to global/certain path
 app.post("/register", registerUser);
 app.post("/login", loginUser);
-app.get("/users", getUsers);
 
+app.get("/users", getUsers);
 
 app.use((err, req, res, next) => {
   if (err.type === "auth") {
