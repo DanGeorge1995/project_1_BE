@@ -28,14 +28,36 @@ export const registerUser = async (req, res, next) => {
 };
 
 export const loginUser = async (req, res, next) => {
-  // try {
-  //// do here the login logic
-  //// similar  to registerUser function
-  //// first: find user in db, if it doesn't exist,  send error message back to client
-  //// if it exist, create tokens and follow the logic as on register
-  // } catch (err) {
-  //   next(err);
-  // }
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        email: req.body.email
+      }
+    })
+    if (!user) {
+      res.status(404).json({ message: 'Wrong email' })
+    }
+
+    const isValidPassword = await comparePasswords(req.body.password, user.password);
+    if (!isValidPassword) {
+      res.status(404).json({ message: 'Wrong password' })
+    }
+
+    const accessToken = createJWT(user, process.env.ACCESS_TOKEN_SECRET, '30s');
+    const refreshToken = createJWT(user, process.env.REFRESH_TOKEN_SECRET, '1min');
+
+    const updatedUser = await prisma.user.update({
+      where: { id: user.id },
+      data: { refresh_token: refreshToken },
+    });
+
+    res.cookie('refresh_token', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+    res.json({ accessToken });
+
+
+  } catch (err) {
+    next(err);
+  }
 };
 
 export const getUsers = async (req, res, next) => {

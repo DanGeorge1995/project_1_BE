@@ -20,6 +20,8 @@ app.use("/api", protect, router); // allow using some configuration to global/ce
 app.post("/register", registerUser);
 app.post("/login", loginUser);
 
+app.get("/users", getUsers);
+
 app.use((err, req, res, next) => {
   if (err.type === "auth") {
     res.status(401).json({ message: "unauthorized" });
