@@ -3,7 +3,7 @@ import router from "./router";
 import morgan from "morgan";
 import cors from "cors";
 import { protect } from "./modules/auth";
-import { loginUser, registerUser, getUsers } from "./handlers/user";
+import { loginUser, registerUser, getUsers, logoutUser } from "./handlers/user";
 
 const app = express();
 
@@ -19,6 +19,7 @@ app.get("/", (req, res) => {
 app.use("/api", protect, router); // allow using some configuration to global/certain path
 app.post("/register", registerUser);
 app.post("/login", loginUser);
+app.post("/logout", logoutUser);
 
 app.get("/users", getUsers);
 
