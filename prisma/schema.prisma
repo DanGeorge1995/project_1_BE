@@ -21,5 +21,5 @@ model User {
   gender  String?
   country String?
   phone_number Int?
-  refresh_token String?
+  refresh_token String? @unique
 }
