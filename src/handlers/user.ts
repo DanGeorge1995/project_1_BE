@@ -1,5 +1,6 @@
 import prisma from "../db";
 import { comparePasswords, createJWT, hashPassword } from "../modules/auth";
+import { userWithoutRefreshToken } from "../helpers";
 
 export const registerUser = async (req, res, next) => {
   try {
@@ -14,14 +15,12 @@ export const registerUser = async (req, res, next) => {
     const accessToken = createJWT(createdUser, process.env.ACCESS_TOKEN_SECRET, "30s");
     const refreshToken = createJWT(createdUser, process.env.REFRESH_TOKEN_SECRET, "1min");
 
-    const user = await prisma.user.update({
+    await prisma.user.update({
       where: { id: createdUser.id },
       data: { refresh_token: refreshToken },
     });
     res.cookie("refresh_token", refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
-    res.json({ accessToken, user });
-
-
+    res.status(200).json({ ...createdUser, accessToken });
   } catch (err) {
     console.log(err);
     err.type = "input";
@@ -33,30 +32,31 @@ export const loginUser = async (req, res, next) => {
   try {
     const user = await prisma.user.findUnique({
       where: {
-        email: req.body.email
-      }
-    })
+        email: req.body.email,
+      },
+      select: {
+        ...userWithoutRefreshToken,
+      },
+    });
     if (!user) {
-      res.status(404).json({ message: 'Wrong email' })
+      res.status(404).json({ message: "Wrong email" });
     }
 
     const isValidPassword = await comparePasswords(req.body.password, user.password);
     if (!isValidPassword) {
-      res.status(404).json({ message: 'Wrong password' })
+      res.status(404).json({ message: "Wrong password" });
     }
 
-    const accessToken = createJWT(user, process.env.ACCESS_TOKEN_SECRET, '30s');
-    const refreshToken = createJWT(user, process.env.REFRESH_TOKEN_SECRET, '1min');
+    const accessToken = createJWT(user, process.env.ACCESS_TOKEN_SECRET, "30s");
+    const refreshToken = createJWT(user, process.env.REFRESH_TOKEN_SECRET, "1min");
 
-    const updatedUser = await prisma.user.update({
+    await prisma.user.update({
       where: { id: user.id },
       data: { refresh_token: refreshToken },
     });
 
-    res.cookie('refresh_token', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
-    res.json({ accessToken, updatedUser });
-
-
+    res.cookie("refresh_token", refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+    res.json({ ...user, accessToken });
   } catch (err) {
     next(err);
   }
