@@ -64,29 +64,29 @@ export const loginUser = async (req, res, next) => {
 
 export const logoutUser = async (req, res, next) => {
   try {
-    const userToken = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         refresh_token: req.body.refresh_token
-
       }
     });
 
-    if (userToken) {
-      if (req.body.id) {
-        await prisma.user.update({
-          where: { id: req.body.id },
-          data: { refresh_token: null },
-        });
-      } else {
-        console.error('User ID is missing in the request body');
-      }
+    if (!user) {
+      res.status(404).json({ message: 'User ID is missing in the request body' });
+    }
+
+    if (req.body.id) {
+      await prisma.user.update({
+        where: { id: req.body.id },
+        data: { refresh_token: null },
+      });
+    } else {
+      res.status(404).json({ message: "No id found !" })
     }
 
     res.clearCookie('refresh_token', { httpOnly: true, path: '/' });
-    res.json({ message: 'Logout successfuly', userToken })
+    res.json({ message: 'Logout successfuly', ...user })
 
   } catch (err) {
-
     next(err);
   }
 }
@@ -94,7 +94,10 @@ export const logoutUser = async (req, res, next) => {
 export const getUsers = async (req, res, next) => {
   try {
     const users = await prisma.user.findMany();
-    res.json({ users: users });
+    if (!users) {
+      res.status(404).json({ message: "No users found !" })
+    }
+    res.json({ ...users });
   } catch (err) {
     next(err);
   }

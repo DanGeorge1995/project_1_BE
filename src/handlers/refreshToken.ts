@@ -8,7 +8,6 @@ export const handleRefreshToken = async (req, res, next) => {
     if (!cookies?.refresh_token) {
       return res.status(401).json({ message: "not authorized" });
     }
-    console.log(cookies.refresh_token);
     const refreshToken = cookies.refresh_token;
 
     const user = await prisma.user.findUnique({
