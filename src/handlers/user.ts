@@ -62,10 +62,42 @@ export const loginUser = async (req, res, next) => {
   }
 };
 
+export const logoutUser = async (req, res, next) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        refresh_token: req.body.refresh_token
+      }
+    });
+
+    if (!user) {
+      res.status(404).json({ message: 'User ID is missing in the request body' });
+    }
+
+    if (req.body.id) {
+      await prisma.user.update({
+        where: { id: req.body.id },
+        data: { refresh_token: null },
+      });
+    } else {
+      res.status(404).json({ message: "No id found !" })
+    }
+
+    res.clearCookie('refresh_token', { httpOnly: true, path: '/' });
+    res.json({ message: 'Logout successfuly', ...user })
+
+  } catch (err) {
+    next(err);
+  }
+}
+
 export const getUsers = async (req, res, next) => {
   try {
     const users = await prisma.user.findMany();
-    res.json({ users: users });
+    if (!users) {
+      res.status(404).json({ message: "No users found !" })
+    }
+    res.json({ ...users });
   } catch (err) {
     next(err);
   }
