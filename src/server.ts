@@ -8,6 +8,8 @@ import { loginUser, registerUser, getUsers, logoutUser } from "./handlers/user";
 import { handleRefreshToken } from "./handlers/refreshToken";
 import { ErrorTypes } from "./errors/enums";
 import { handleInvalidInputResponse, handleServerErrorResponse, handleUnauthorizedResponse } from "./errors/responses";
+import { validateRegistration, validateLogin } from "./validations";
+import { handleInputErrors } from "./modules/middleware";
 
 const app = express();
 
@@ -27,10 +29,10 @@ app.get("/users", getUsers);
 app.use("/api", protect, router);
 
 // Auth routes
-app.post("/register", registerUser);
-app.post("/login", loginUser);
+app.post("/register", validateRegistration(), handleInputErrors, registerUser);
+app.post("/login", validateLogin(), handleInputErrors, loginUser);
 app.post("/logout", protect, logoutUser);
-app.get("/refresh", handleRefreshToken);
+app.post("/refresh", handleRefreshToken);
 
 app.use((err, req, res, next) => {
   if (err.type === ErrorTypes.AUTH) {
