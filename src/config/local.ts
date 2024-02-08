@@ -1,3 +1,7 @@
 export default {
   port: 3001,
+  accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
+  refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
+  accessTokenExpiration: process.env.ACCESS_TOKEN_EXPIRATION,
+  refreshTokenExpiration: process.env.REFRESH_TOKEN_EXPIRATION,
 };

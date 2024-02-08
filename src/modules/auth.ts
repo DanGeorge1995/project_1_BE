@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { handleInvalidTokenResponse, handleUnauthorizedResponse } from "../errors/responses";
+import config from "../config";
 
 export const comparePasswords = (password, hash) => {
   return bcrypt.compare(password, hash);
@@ -26,24 +28,21 @@ export const protect = (req, res, next) => {
   const bearer = req.headers.authorization;
 
   if (!bearer) {
-    res.status(401).json({ message: "not authorized" });
-    return;
+    return handleUnauthorizedResponse(res);
   }
 
   const [, token] = bearer.split(" ");
 
   if (!token) {
-    res.status(401).json({ message: "not valid token" });
-    return;
+    return handleInvalidTokenResponse(res);
   }
 
   try {
-    const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const user = jwt.verify(token, config.accessTokenSecret);
     req.user = user;
     next();
   } catch (error) {
     console.error(error);
-    res.status(401).json({ message: "not valid token" });
-    return;
+    return handleInvalidTokenResponse(res);
   }
 };

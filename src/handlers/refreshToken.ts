@@ -1,30 +1,28 @@
-import prisma from "../db";
 import jwt from "jsonwebtoken";
 import { createJWT } from "../modules/auth";
+import { findUserByRefreshToken } from "../db/dbQueries";
+import config from "../config";
+import { handleForbiddenResponse, handleUnauthorizedResponse } from "../errors/responses";
 
 export const handleRefreshToken = async (req, res, next) => {
   try {
-    const cookies = req.cookies;
-    if (!cookies?.refresh_token) {
-      return res.status(401).json({ message: "not authorized" });
+    const cookiesRefreshToken = req.cookies?.refresh_token;
+    if (!cookiesRefreshToken) {
+      return handleUnauthorizedResponse(res);
     }
-    const refreshToken = cookies.refresh_token;
 
-    const user = await prisma.user.findUnique({
-      where: {
-        refresh_token: refreshToken,
-      },
-    });
+    const user = await findUserByRefreshToken(cookiesRefreshToken);
+
     if (!user) {
-      res.status(403).json({ message: "forbidden" });
+      return handleForbiddenResponse(res);
     }
-    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
-      console.log({ err, user, decoded });
+
+    jwt.verify(cookiesRefreshToken, config.refreshTokenSecret, (err, decoded) => {
       if (err || user.email !== decoded.email) {
-        return res.status(403).json({ message: "forbidden" });
+        return handleForbiddenResponse(res);
       }
-      const accessToken = createJWT(decoded, process.env.ACCESS_TOKEN_SECRET, "30s");
-      res.json({ accessToken });
+      const accessToken = createJWT(decoded, config.accessTokenSecret, config.accessTokenExpiration);
+      res.status(200).json({ accessToken });
     });
   } catch (err) {
     next(err);
