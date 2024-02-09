@@ -7,6 +7,7 @@ export enum ErrorMessages {
   EMPTY_FIELD = "The field is empty",
   INVALID_EMAIL = "This is not a valid e-mail address",
   PASSWORD_LENGTH = "Password must be between 6 and 20 characters long",
+  DUPLICATE_CATEGORY = "This category already exists for this user",
 }
 
 export enum ErrorTypes {

@@ -1,6 +1,6 @@
-import { hashPassword } from "../modules/auth";
-import { userWithoutRefreshToken } from "../helpers";
-import prisma from "./db";
+import { hashPassword } from "../../modules/auth";
+import { userWithoutRefreshToken } from "../../helpers";
+import prisma from "../db";
 
 export const createUser = async (req) =>
   prisma.user.create({

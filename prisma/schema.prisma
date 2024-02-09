@@ -22,4 +22,17 @@ model User {
   country String?
   phone_number Int?
   refresh_token String? @unique
+  // Reference to Category model (one to many)
+  categories Category[]
+}
+
+model Category {
+    id        String    @id @default(uuid())
+    created_at DateTime  @default(now())
+    updated_at DateTime  @default(now())
+    name  String
+    description String?
+    // Reference to User model
+    user_id         String      // This references the id in the User model
+    user           User        @relation(fields: [user_id], references: [id])
 }

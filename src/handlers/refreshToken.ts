@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { createJWT } from "../modules/auth";
-import { findUserByRefreshToken } from "../db/dbQueries";
+import { findUserByRefreshToken } from "../db/queries/auth";
 import config from "../config";
 import { handleForbiddenResponse, handleUnauthorizedResponse } from "../errors/responses";
 

@@ -1,7 +1,7 @@
 import prisma from "../db/db";
 import { comparePasswords, createJWT } from "../modules/auth";
 import config from "../config";
-import { createUser, findUserBy, findUserByRefreshToken, removeRefreshToken, updateAuthUser } from "../db/dbQueries";
+import { createUser, findUserBy, findUserByRefreshToken, removeRefreshToken, updateAuthUser } from "../db/queries/auth";
 import { ErrorTypes } from "../errors/enums";
 import { Cookies, SuccessMessages, refreshTokenCookieOptions } from "../helpers";
 import { handleForbiddenResponse, handleUnauthorizedResponse, handleWrongCredentialsResponse } from "../errors/responses";
