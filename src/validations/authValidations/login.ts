@@ -1,5 +1,5 @@
 import { checkSchema } from "express-validator";
-import { emailValidationSchema, passwordValidationSchema } from "./fieldSchemas";
+import { emailValidationSchema, passwordValidationSchema } from "../fieldSchemas";
 
 export const loginSchema = {
   email: emailValidationSchema,

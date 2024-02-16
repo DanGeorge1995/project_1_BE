@@ -1,4 +1,4 @@
-import { ErrorMessages } from "../errors/enums";
+import { ErrorMessages } from "../../errors/enums";
 
 export const emailValidationSchema = {
   trim: true,
@@ -30,33 +30,6 @@ export const passwordValidationSchema = {
   isLength: {
     options: { min: 8, max: 20 },
     errorMessage: ErrorMessages.PASSWORD_LENGTH,
-  },
-  escape: true,
-};
-
-export const userIdValidationSchema = {
-  trim: true,
-  notEmpty: {
-    errorMessage: ErrorMessages.EMPTY_FIELD,
-    bail: true,
-  },
-  escape: true,
-};
-
-export const categoryNameValidationSchema = {
-  trim: true,
-  notEmpty: {
-    errorMessage: ErrorMessages.EMPTY_FIELD,
-    bail: true,
-  },
-  escape: true,
-};
-
-export const categoryDescriptionValidationSchema = {
-  trim: true,
-  notEmpty: {
-    errorMessage: ErrorMessages.EMPTY_FIELD,
-    bail: true,
   },
   escape: true,
 };

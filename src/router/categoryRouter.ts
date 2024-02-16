@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { createCategory } from "../handlers/category";
-import { validateCreateCategory } from "../validations/category";
+import { validateCreateCategory } from "../validations/categoriesValidations/createCategory";
 import { handleInputErrors } from "../modules/middleware";
 
 const categoryRouter = Router();
