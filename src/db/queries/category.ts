@@ -8,11 +8,11 @@ export const findDuplicateCategory = async (req) =>
     },
   });
 
-  export const findCategoryById = async (req) =>
+export const findCategoryById = async (req) =>
   await prisma.category.findUnique({
     where: {
       user_id: req.body.id,
-      id: req.params.
+      id: req.params.category_id,
     },
   });
 
