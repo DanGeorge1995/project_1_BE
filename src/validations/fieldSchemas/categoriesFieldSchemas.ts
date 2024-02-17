@@ -9,6 +9,16 @@ export const categoryNameValidationSchema = {
   escape: true,
 };
 
+export const categoryIdValidationSchema = {
+  trim: true,
+  exists: true,
+  notEmpty: {
+    errorMessage: ErrorMessages.EMPTY_FIELD,
+    bail: true,
+  },
+  escape: true,
+};
+
 export const categoryDescriptionValidationSchema = {
   trim: true,
   notEmpty: {
