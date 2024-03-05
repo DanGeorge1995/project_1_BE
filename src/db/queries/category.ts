@@ -35,3 +35,25 @@ export const updateExistingCategory = async (req) =>
       description: req.body.description,
     },
   });
+
+export const deleteOneCategory = async (req) =>
+  prisma.category.delete({
+    where: { id: req.params.category_id, user_id: req.body.user_id },
+  });
+
+export const getCategories = async (req) => {
+  const user_id = req.params.user_id;
+  // Query params for filtering
+  const limit = parseInt(req.query.limit) || 10;
+  const offset = parseInt(req.query.offset) || 0;
+  // Query params for sorting
+  const sortingOption = req.query.sortingOption || "created_at";
+  const sortingType = req.query.sortingType || "desc";
+
+  return prisma.category.findMany({
+    where: { user_id },
+    take: limit,
+    skip: offset,
+    orderBy: [{ [sortingOption]: sortingType }],
+  });
+};

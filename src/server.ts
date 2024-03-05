@@ -3,7 +3,7 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { protect } from "./modules/auth";
-import { loginUser, registerUser, getUsers, logoutUser } from "./handlers/user";
+import { loginUser, registerUser, logoutUser } from "./handlers/user";
 import { handleRefreshToken } from "./handlers/refreshToken";
 import { ErrorTypes } from "./errors/enums";
 import { handleInvalidInputResponse, handleServerErrorResponse, handleUnauthorizedResponse } from "./errors/responses";
@@ -23,7 +23,6 @@ app.use(cookieParser());
 app.get("/", (req, res) => {
   res.json({ message: "hello" });
 });
-app.get("/users", getUsers);
 
 // Auth routes
 app.post("/register", validateRegistration(), handleInputErrors, registerUser);

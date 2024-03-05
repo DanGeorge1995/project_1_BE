@@ -1,5 +1,5 @@
 import { checkSchema } from "express-validator";
-import { categoryDescriptionValidationSchema, categoryIdValidationSchema, userIdValidationSchema } from "../fieldSchemas";
+import { categoryDescriptionValidationSchema, userIdValidationSchema } from "../fieldSchemas";
 import { categoryIdCustomValidationSchema, categoryNameCustomValidationSchema } from "./custom";
 
 export const updateCategorySchema = {
