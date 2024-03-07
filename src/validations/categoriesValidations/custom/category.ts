@@ -11,7 +11,6 @@ const checkUniqueName = async (value, { req, location, path }) => {
 
 const checkIdExistence = async (value, { req, location, path }) => {
   const category = await findCategoryById(req);
-  console.log({ category });
   if (!category) {
     return Promise.reject();
   }

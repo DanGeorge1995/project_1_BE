@@ -60,12 +60,13 @@ model Activity {
   id                 String   @id @default(uuid())
   created_at         DateTime @default(now())
   updated_at         DateTime @default(now())
+  deadline           DateTime?
   name               String
   description        String?
   status             Status   @default(TO_DO)
   priority           Priority @default(LOW)
-  estimated_expenses Int?
-  final_expenses     Int?
+  estimated_expenses Float?
+  final_expenses     Float?
   has_been_canceled  Boolean  @default(false)
   cancelation_reason String?
   // Reference to Category model

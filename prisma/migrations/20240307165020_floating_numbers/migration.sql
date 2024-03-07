@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Activity" ALTER COLUMN "estimated_expenses" SET DATA TYPE DOUBLE PRECISION,
+ALTER COLUMN "final_expenses" SET DATA TYPE DOUBLE PRECISION;
