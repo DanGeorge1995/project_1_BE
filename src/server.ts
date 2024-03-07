@@ -10,6 +10,7 @@ import { handleInvalidInputResponse, handleServerErrorResponse, handleUnauthoriz
 import { validateRegistration, validateLogin } from "./validations";
 import { handleInputErrors } from "./modules/middleware";
 import categoryRouter from "./router/categoryRouter";
+import activityRouter from "./router/activityRouter";
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.post("/refresh", handleRefreshToken);
 
 // Protected routes
 app.use("/categories", protect, categoryRouter);
+app.use("/activities", protect, activityRouter);
 
 app.use((err, req, res, next) => {
   if (err.type === ErrorTypes.AUTH) {

@@ -1,6 +1,6 @@
 import { checkSchema } from "express-validator";
-import { categoryDescriptionValidationSchema, categoryIdValidationSchema, userIdValidationSchema } from "../fieldSchemas";
-import { categoryIdCustomValidationSchema, categoryNameCustomValidationSchema } from "./custom";
+import { userIdValidationSchema } from "../fieldSchemas";
+import { categoryIdCustomValidationSchema } from "./custom";
 
 export const deleteCategorySchema = {
   category_id: categoryIdCustomValidationSchema,

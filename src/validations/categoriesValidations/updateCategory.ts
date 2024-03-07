@@ -1,12 +1,12 @@
 import { checkSchema } from "express-validator";
-import { categoryDescriptionValidationSchema, userIdValidationSchema } from "../fieldSchemas";
+import { descriptionValidationSchema, userIdValidationSchema } from "../fieldSchemas";
 import { categoryIdCustomValidationSchema, categoryNameCustomValidationSchema } from "./custom";
 
 export const updateCategorySchema = {
   category_id: categoryIdCustomValidationSchema,
   user_id: userIdValidationSchema,
   name: categoryNameCustomValidationSchema,
-  description: categoryDescriptionValidationSchema,
+  description: descriptionValidationSchema,
 };
 
 export const validateUpdateCategory = () => {

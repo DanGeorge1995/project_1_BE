@@ -11,28 +11,67 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(uuid())
-  created_at DateTime  @default(now())
-  updated_at DateTime  @default(now())
-  email     String    @unique
-  username  String    @unique
-  password  String
-  date_of_birth   DateTime?
-  gender  String?
-  country String?
-  phone_number Int?
-  refresh_token String? @unique
+  id            String     @id @default(uuid())
+  created_at    DateTime   @default(now())
+  updated_at    DateTime   @default(now())
+  email         String     @unique
+  username      String     @unique
+  password      String
+  date_of_birth DateTime?
+  gender        String?
+  country       String?
+  phone_number  Int?
+  refresh_token String?    @unique
   // Reference to Category model (one to many)
-  categories Category[]
+  categories    Category[]
+  // Reference to Category model (one to many)
+  activities    Activity[]
 }
 
 model Category {
-    id        String    @id @default(uuid())
-    created_at DateTime  @default(now())
-    updated_at DateTime  @default(now())
-    name  String
-    description String?
-    // Reference to User model
-    user_id         String      // This references the id in the User model
-    user           User        @relation(fields: [user_id], references: [id])
+  id          String     @id @default(uuid())
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @default(now())
+  name        String
+  description String?
+  // Reference to User model
+  user_id     String // This references the id in the User model
+  user        User       @relation(fields: [user_id], references: [id])
+  // Reference to Activity model (one to many)
+  activities  Activity[]
+}
+
+enum Status {
+  TO_DO
+  IN_PROGRESS
+  ON_HOLD
+  COMPLETED
+  CANCELLED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model Activity {
+  id                 String   @id @default(uuid())
+  created_at         DateTime @default(now())
+  updated_at         DateTime @default(now())
+  name               String
+  description        String?
+  status             Status   @default(TO_DO)
+  priority           Priority @default(LOW)
+  estimated_expenses Int?
+  final_expenses     Int?
+  has_been_canceled  Boolean  @default(false)
+  cancelation_reason String?
+  // Reference to Category model
+  category_id        String // This references the id in the User model
+  category           Category @relation(fields: [category_id], references: [id])
+  // Reference to User model
+  user_id            String // This references the id in the User model
+  user               User     @relation(fields: [user_id], references: [id])
 }

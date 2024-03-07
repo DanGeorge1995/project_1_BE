@@ -14,4 +14,6 @@ export const handleNoParamFoundResponse = (res) => res.status(404).json({ messag
 
 export const handleDuplicateCategoryResponse = (res) => res.status(409).json({ message: ErrorMessages.DUPLICATE_CATEGORY });
 
+export const handleDuplicateActivityResponse = (res) => res.status(409).json({ message: ErrorMessages.DUPLICATE_ACTIVITY });
+
 export const handleServerErrorResponse = (res) => res.status(500).json({ message: ErrorMessages.SERVER_ERROR });
