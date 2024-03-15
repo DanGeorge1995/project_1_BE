@@ -1,5 +1,23 @@
 import prisma from "../db";
 
+export const getActivities = async (req) => {
+  const user_id = req.params.user_id;
+  const category_id = req.body.category_id;
+  // Query params for filtering
+  const limit = parseInt(req.query.limit) || 10;
+  const offset = parseInt(req.query.offset) || 0;
+  // Query params for sorting
+  const sortingOption = req.query.sortingOption || "created_at";
+  const sortingType = req.query.sortingType || "desc";
+
+  return prisma.activity.findMany({
+    where: { user_id, category_id },
+    take: limit,
+    skip: offset,
+    orderBy: [{ [sortingOption]: sortingType }],
+  });
+};
+
 export const createNewActivity = async (req) =>
   prisma.activity.create({
     data: {
@@ -53,4 +71,9 @@ export const updateExistingActivity = async (req) =>
       priority: req.body.priority,
       estimated_expenses: parseFloat(req.body.estimated_expenses) || null,
     },
+  });
+
+export const deleteOneActivity = async (req) =>
+  prisma.activity.delete({
+    where: { id: req.params.activity_id, user_id: req.body.user_id, category_id: req.body.category_id },
   });
